@@ -2,6 +2,7 @@ package demo.controller;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -15,22 +16,36 @@ import demo.utils.USLocalDateFormatter;
 
 @Controller
 public class ProfileController {
+
+	@ModelAttribute("dateFormat")
+	public String localeFormat(Locale locale) {
+		return USLocalDateFormatter.getPattern(locale);
+	}
+
 	@RequestMapping("/profile")
 	public String displayProfile(ProfileForm profileForm) {
 		return "profile/profilePage";
 	}
 
-	@RequestMapping(value = "/profile", method = RequestMethod.POST)
-	public String saveProfile(@Valid ProfileForm profileForm,
-			BindingResult result) {
+	@RequestMapping(value = "/profile", method = RequestMethod.POST, params = "save")
+	public String saveProfile(@Valid ProfileForm profileForm, BindingResult result) {
 		if (result.hasErrors())
 			return "profile/profilePage";
 		System.out.println("save ok" + profileForm);
 		return "redirect:/profile";
 	}
 
-	@ModelAttribute("dateFormat")
-	public String localeFormat(Locale locale) {
-		return USLocalDateFormatter.getPattern(locale);
+	@RequestMapping(value = "/profile", params = { "addTaste" })
+	public String addRow(ProfileForm profileForm, HttpServletRequest req) {
+		profileForm.getTastes().add(req.getParameter("removeTaste"));
+		return "profile/profilePage";
 	}
+
+	@RequestMapping(value = "/profile", params = { "removeTaste" })
+	public String removeRow(ProfileForm profileForm, HttpServletRequest req) {
+		Integer rowId = Integer.valueOf(req.getParameter("removeTaste"));
+		profileForm.getTastes().remove(rowId.intValue());
+		return "profile/profilePage";
+	}
+
 }

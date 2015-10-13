@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import demo.annot.PastLocalDate;
+
 public class ProfileForm {
 	@Size(min = 2)
 	private String twitterHandle;
@@ -17,6 +19,7 @@ public class ProfileForm {
 	@NotEmpty
 	private String email;
 	@NotNull
+	@PastLocalDate
 	private LocalDate birthDate;
 	@NotEmpty
 	private List<String> tastes = new ArrayList<>();
@@ -55,8 +58,6 @@ public class ProfileForm {
 
 	@Override
 	public String toString() {
-		return "ProfileForm [twitterHandle=" + twitterHandle + ", email="
-				+ email + ", birthDate=" + birthDate + ", tastes=" + tastes
-				+ "]";
+		return "ProfileForm [twitterHandle=" + twitterHandle + ", email=" + email + ", birthDate=" + birthDate + ", tastes=" + tastes + "]";
 	}
 }
