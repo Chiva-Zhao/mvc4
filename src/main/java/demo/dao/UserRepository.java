@@ -7,11 +7,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Repository;
 
+import demo.error.EntityNotFoundException;
 import demo.model.User;
 
 @Repository
 public class UserRepository {
 	private final Map<String, User> userMap = new ConcurrentHashMap<>();
+
+	public User update(String email, User user) throws EntityNotFoundException {
+		if (!exists(email)) {
+			throw new EntityNotFoundException("User " + email
+					+ "cannot be found");
+		}
+		user.setEmail(email);
+		return userMap.put(email, user);
+	}
 
 	public User save(String email, User user) {
 		user.setEmail(email);
@@ -22,7 +32,11 @@ public class UserRepository {
 		return save(user.getEmail(), user);
 	}
 
-	public User findOne(String email) {
+	public User findOne(String email) throws EntityNotFoundException {
+		if (!exists(email)) {
+			throw new EntityNotFoundException("User " + email
+					+ "cannot be found");
+		}
 		return userMap.get(email);
 	}
 
@@ -30,7 +44,11 @@ public class UserRepository {
 		return new ArrayList<>(userMap.values());
 	}
 
-	public void delete(String email) {
+	public void delete(String email) throws EntityNotFoundException {
+		if (!exists(email)) {
+			throw new EntityNotFoundException("User " + email
+					+ "cannot be found");
+		}
 		userMap.remove(email);
 	}
 
