@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extrasspringsecurity3">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initialscale=1, maximum-scale=1.0, user-scalable=no" />
@@ -20,6 +21,14 @@
 			</ul>
 		</div>
 	</nav>
+	<div>
+		You are logged as <b sec:authentication="name" /> with roles <span sec:authentication="authorities" />-
+		<form th:action="@{/logout}" method="post" style="display: inlineblock">
+			<input type="submit" value="Sign Out" />
+		</form>
+		<hr />
+	</div>
+	<div sec:authorize="hasRole('ROLE_ADMIN')">You are an administrator</div>
 	<section layout:fragment="content">
 		<p>Page content goes here</p>
 	</section>
