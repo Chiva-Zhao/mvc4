@@ -28,10 +28,12 @@ public class TweetController {
 	}
 
 	@RequestMapping(value = "/postSearch", method = RequestMethod.POST)
-	public String postSearch(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+	public String postSearch(HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
 		String search = request.getParameter("search");
 		if (search.toLowerCase().contains("struts")) {
-			redirectAttributes.addFlashAttribute("error", "Try	using spring instead!");
+			redirectAttributes.addFlashAttribute("error",
+					"Try	using spring instead!");
 			return "redirect:/";
 		}
 		redirectAttributes.addAttribute("search", search);
@@ -39,11 +41,16 @@ public class TweetController {
 	}
 
 	@RequestMapping("/result")
-	public String hello(@RequestParam(defaultValue = "mvc", value = "search") String query, Model model) {
+	public String hello(
+			@RequestParam(defaultValue = "mvc", value = "search") String query,
+			Model model) {
 		List<Tweet> tweets = new ArrayList<>();
-		Tweet t1 = new Tweet("chiva", "hello", "http://download.easyicon.net/png/1189119/32/");
-		Tweet t2 = new Tweet("chiva1", "hello1", "http://download.easyicon.net/png/1189119/24/");
-		Tweet t3 = new Tweet("chiva2", "hello2", "http://download.easyicon.net/png/1189119/16/");
+		Tweet t1 = new Tweet("chiva", "hello",
+				"http://download.easyicon.net/png/1189119/32/");
+		Tweet t2 = new Tweet("chiva1", "hello1",
+				"http://download.easyicon.net/png/1189119/24/");
+		Tweet t3 = new Tweet("chiva2", "hello2",
+				"http://download.easyicon.net/png/1189119/16/");
 		tweets.add(t1);
 		tweets.add(t2);
 		tweets.add(t3);

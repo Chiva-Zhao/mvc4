@@ -2,7 +2,6 @@ package demo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 //@EnableGlobalMethodSecurity(securedEnabled = true)
-@Order(1)
 public class ApiSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
 	public void configureAuth(AuthenticationManagerBuilder builder) throws Exception {
@@ -20,7 +18,7 @@ public class ApiSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.httpBasic().and().csrf().disable().authorizeRequests().antMatchers("/login", "/logout").permitAll()
+		http.formLogin().and().csrf().disable().authorizeRequests().antMatchers("/login", "/logout").permitAll()
 				.antMatchers(HttpMethod.GET, "/api/**").hasRole("USER").antMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN").antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN").anyRequest()
 				.authenticated();
