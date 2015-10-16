@@ -13,7 +13,8 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.formLogin().loginPage("/login")
 				// <= custom login page
 				.defaultSuccessUrl("/profile").and().logout().logoutSuccessUrl("/login").and().authorizeRequests()
-				.antMatchers("/webjars/**", "/login", "/signin/**", "/signup").permitAll().anyRequest().authenticated();
+				.antMatchers("/webjars/**", "/login", "/signin/**", "/signup").permitAll().anyRequest().authenticated()
+				.and().requiresChannel().anyRequest().requiresSecure();
 	}
 
 }
