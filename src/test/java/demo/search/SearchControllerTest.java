@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -23,7 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import demo.DemoApplication;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { DemoApplication.class, StubTwitterSearchConfig.class })
+@SpringApplicationConfiguration(classes = { DemoApplication.class,
+		StubTwitterSearchConfig.class })
 @WebAppConfiguration
 public class SearchControllerTest {
 	@Autowired
@@ -37,8 +39,15 @@ public class SearchControllerTest {
 
 	@Test
 	public void should_search() throws Exception {
-		mockMvc.perform(get("/search/mixed;keywords=spring")).andExpect(status().isOk()).andExpect(view().name("resultPage"))
+		mockMvc.perform(get("/search1/mixed;keywords=spring"))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(view().name("resultPage"))
 				.andExpect(model().attribute("tweets", hasSize(2)))
-				.andExpect(model().attribute("tweets", hasItems(hasProperty("text", is("tweetText")), hasProperty("text", is("secondTweet")))));
+				.andExpect(
+						model().attribute(
+								"tweets",
+								hasItems(hasProperty("text", is("tweetText")),
+										hasProperty("text", is("secondTweet")))));
 	}
 }

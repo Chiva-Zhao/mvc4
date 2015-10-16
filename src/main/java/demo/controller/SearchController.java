@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import demo.model.LightTweet;
 import demo.service.SearchService;
 
 @Controller
@@ -22,8 +23,19 @@ public class SearchController {
 	}
 
 	@RequestMapping("/search/{searchType}")
-	public ModelAndView search(@PathVariable String searchType, @MatrixVariable List<String> keywords) {
+	public ModelAndView search(@PathVariable String searchType,
+			@MatrixVariable List<String> keywords) {
 		List<Tweet> tweets = searchService.search(searchType, keywords);
+		ModelAndView modelAndView = new ModelAndView("resultPage");
+		modelAndView.addObject("tweets", tweets);
+		modelAndView.addObject("search", String.join(",", keywords));
+		return modelAndView;
+	}
+
+	@RequestMapping("/search1/{searchType}")
+	public ModelAndView search1(@PathVariable String searchType,
+			@MatrixVariable List<String> keywords) {
+		List<LightTweet> tweets = searchService.search1(searchType, keywords);
 		ModelAndView modelAndView = new ModelAndView("resultPage");
 		modelAndView.addObject("tweets", tweets);
 		modelAndView.addObject("search", String.join(",", keywords));

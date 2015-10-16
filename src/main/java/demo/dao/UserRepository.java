@@ -16,8 +16,7 @@ public class UserRepository {
 
 	public User update(String email, User user) throws EntityNotFoundException {
 		if (!exists(email)) {
-			throw new EntityNotFoundException("User " + email
-					+ "cannot be found");
+			throw new EntityNotFoundException("User " + email + "cannot be found");
 		}
 		user.setEmail(email);
 		return userMap.put(email, user);
@@ -34,8 +33,7 @@ public class UserRepository {
 
 	public User findOne(String email) throws EntityNotFoundException {
 		if (!exists(email)) {
-			throw new EntityNotFoundException("User " + email
-					+ "cannot be found");
+			throw new EntityNotFoundException("User " + email + "cannot be found");
 		}
 		return userMap.get(email);
 	}
@@ -46,13 +44,19 @@ public class UserRepository {
 
 	public void delete(String email) throws EntityNotFoundException {
 		if (!exists(email)) {
-			throw new EntityNotFoundException("User " + email
-					+ "cannot be found");
+			throw new EntityNotFoundException("User " + email + "cannot be found");
 		}
 		userMap.remove(email);
 	}
 
 	public boolean exists(String email) {
 		return userMap.containsKey(email);
+	}
+
+	public void reset(User... users) {
+		userMap.clear();
+		for (User user : users) {
+			save(user);
+		}
 	}
 }
