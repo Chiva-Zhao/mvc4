@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import demo.model.LightTweet;
 
 @Service
-public class SearchService {
+public class SearchService implements TwitterSearch {
 	private Twitter twitter;
 
 	@Autowired
@@ -29,6 +29,10 @@ public class SearchService {
 		return results;
 	}
 
+	/* (non-Javadoc)
+	 * @see demo.service.TwitterSearch#search1(java.lang.String, java.util.List)
+	 */
+	@Override
 	public List<LightTweet> search1(String searchType, List<String> keywords) {
 		List<LightTweet> results = new ArrayList<>();
 		// List<SearchParameters> searches = keywords.stream().map(taste ->
