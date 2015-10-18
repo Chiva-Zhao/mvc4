@@ -10,6 +10,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -67,5 +68,10 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 		urlPathHelper.setRemoveSemicolonContent(false);
 		configurer.setUrlPathHelper(urlPathHelper);
 		configurer.setUseRegisteredSuffixPatternMatch(true);
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("img/**").addResourceLocations("classpath:/static/images/").setCachePeriod(12);
 	}
 }
