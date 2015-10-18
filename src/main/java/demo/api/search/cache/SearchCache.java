@@ -23,7 +23,7 @@ public class SearchCache {
 
 	@Autowired
 	public SearchCache(TwitterProperties twitterProperties) {
-		this.twitter = new TwitterTemplate(twitterProperties.getAppId(), twitterProperties.getAppSecret());
+//		this.twitter = new TwitterTemplate(twitterProperties.getAppId(), twitterProperties.getAppSecret());
 	}
 
 	@Cacheable("searches")
