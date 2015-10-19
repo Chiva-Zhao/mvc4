@@ -1,5 +1,7 @@
 package demo.config;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,7 +12,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @Configuration
@@ -31,5 +35,23 @@ public class RedisConfig {
 		cacheManager.setCacheNames(Arrays.asList("searches"));
 		cacheManager.setDefaultExpiration(36_000);
 		return cacheManager;
+	}
+
+	@Bean
+	@Profile("heroku")
+	public RedisConnectionFactory redisConnectionFactory() throws URISyntaxException {
+		JedisConnectionFactory redis = new JedisConnectionFactory();
+		String redisUrl = System.getenv("REDIS_URL");
+		URI redisUri = new URI(redisUrl);
+		redis.setHostName(redisUri.getHost());
+		redis.setPort(redisUri.getPort());
+		redis.setPassword(redisUri.getUserInfo().split(":", 2)[1]);
+		return redis;
+	}
+
+	@Bean
+	@Profile({ "cloud", "heroku" })
+	public static ConfigureRedisAction configureRedisAction() {
+		return ConfigureRedisAction.NO_OP;
 	}
 }

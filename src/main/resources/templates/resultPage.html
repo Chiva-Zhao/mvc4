@@ -64,6 +64,21 @@
 				tweet : tweet
 			}));
 		}
+
+		//websocket
+		function connect() {
+			var socket = new SockJS('/hello');
+			stompClient = Stomp.over(socket);
+			// stompClient.debug = null;
+			stompClient.connect({}, function(frame) {
+				console.log('Connected: ' + frame);
+				stompClient.subscribe('/topic/searchResults', function(result) {
+					displayTweets(JSON.parse(result.body));
+				});
+				stompClient.send("/app/search", {}, JSON.stringify(search
+						.split(',')));
+			});
+		}
 	</script>
 </body>
 </html>

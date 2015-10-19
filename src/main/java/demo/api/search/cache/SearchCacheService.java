@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import demo.model.LightTweet;
 import demo.service.TwitterSearch;
@@ -23,8 +25,7 @@ public class SearchCacheService implements TwitterSearch {
 	}
 
 	public List<LightTweet> search(String searchType, List<String> keywords) {
-		return keywords.stream().flatMap(keyword -> searchCache.fetch(searchType, keyword).stream())
-				.collect(Collectors.toList());
+		return keywords.stream().flatMap(keyword -> searchCache.fetch(searchType, keyword).stream()).collect(Collectors.toList());
 	}
 
 	/*
@@ -48,5 +49,10 @@ public class SearchCacheService implements TwitterSearch {
 		tweet.setUser("chiva");
 		results.add(tweet);
 		return results;
+	}
+
+	// For websocket
+	public ListenableFuture<List<LightTweet>> search(String searchType, String keyword) {
+		return new AsyncResult<>(searchCache.fetch(searchType, keyword));
 	}
 }
