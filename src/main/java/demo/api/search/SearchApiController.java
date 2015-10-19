@@ -18,6 +18,7 @@ import demo.service.SearchService;
 public class SearchApiController {
 
 	private SearchService searchService;
+	// private ParallelSearchService searchService;
 
 	@Autowired
 	public SearchApiController(SearchService searchService) {
