@@ -8,12 +8,14 @@ import java.io.OutputStream;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -38,10 +40,13 @@ public class PictureUploadController {
 	private final Resource picturesDir;
 	private final Resource anonymousPicture;
 
+	private final MessageSource messageSource;
+
 	@Autowired
-	public PictureUploadController(PicturesUploadProperties uploadProperties) {
+	public PictureUploadController(PicturesUploadProperties uploadProperties, MessageSource messageSource) {
 		picturesDir = uploadProperties.getUploadPath();
 		anonymousPicture = uploadProperties.getAnonymousPicture();
+		this.messageSource = messageSource;
 	}
 
 	@RequestMapping("upload")
@@ -77,17 +82,17 @@ public class PictureUploadController {
 		return anonymousPicture.getFile().toPath();
 	}
 
-	@ExceptionHandler
-	public ModelAndView handleIOException(IOException exception) {
+	@ExceptionHandler(IOException.class)
+	public ModelAndView handleIOException(Locale locale) {
 		ModelAndView modelAndView = new ModelAndView("profile/uploadPage");
-		modelAndView.addObject("error", exception.getMessage());
+		modelAndView.addObject("error", messageSource.getMessage("upload.io.exception", null, locale));
 		return modelAndView;
 	}
 
 	@RequestMapping("/uploadError")
-	public ModelAndView onUploadError(HttpServletRequest request) {
+	public ModelAndView onUploadError(Locale locale) {
 		ModelAndView modelAndView = new ModelAndView("uploadPage");
-		modelAndView.addObject("error", request.getAttribute(WebUtils.ERROR_MESSAGE_ATTRIBUTE));
+		modelAndView.addObject("error", messageSource.getMessage("upload.file.too.big", null, locale));
 		return modelAndView;
 	}
 
