@@ -2,11 +2,14 @@ package demo.config;
 
 import java.time.LocalDate;
 
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
@@ -60,6 +63,18 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 		ObjectMapper mapper = builder.createXmlMapper(false).build();
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		return mapper;
+	}
+
+	@Bean
+	public EmbeddedServletContainerCustomizer containerCustomizer() {
+		//		EmbeddedServletContainerCustomizer embeddedServletContainerCustomizer = new EmbeddedServletContainerCustomizer() {
+		//			@Override
+		//			public void customize(ConfigurableEmbeddedServletContainer container) {
+		//				container.addErrorPages(new ErrorPage(MultipartException.class, "/uploadError"));
+		//			}
+		//		};
+		//		return embeddedServletContainerCustomizer;
+		return container -> container.addErrorPages(new ErrorPage(MultipartException.class, "/uploadError"));
 	}
 
 	@Override
