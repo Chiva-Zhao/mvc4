@@ -1,12 +1,16 @@
 package demo.profile;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 
 import demo.model.ProfileForm;
@@ -23,6 +27,7 @@ public class UserProfileSession implements Serializable {
 	private String email;
 	private LocalDate birthDate;
 	private List<String> tastes = new ArrayList<>();
+	private URL picturePath;
 
 	public void saveForm(ProfileForm profileForm) {
 		this.twitterHandle = profileForm.getTwitterHandle();
@@ -74,6 +79,14 @@ public class UserProfileSession implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public Resource getPicturePath() {
+		return picturePath == null ? null : new UrlResource(picturePath);
+	}
+
+	public void setPicturePath(Resource picturePath) throws IOException {
+		this.picturePath = picturePath.getURL();
 	}
 
 }
